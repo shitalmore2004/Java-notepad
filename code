@@ -1,0 +1,240 @@
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+public class Anotepad extends JFrame implements ActionListener, KeyListener {
+// initializing
+int fontsize1 = 20;
+JLabel labelword, labelfsize, textLength;
+JTextArea ta;
+JMenuBar menubar;
+JMenu menu1, menu2, menu3;
+JMenuItem item1, item2, item3, item4, item5,item6, open, fontsize, cut, copy, paste, 
+selectall, normalmode, totalwords,
+totalcharacters;
+JScrollPane jsp;
+FileDialog fd;
+JDialog words;
+JButton Bold, italic, plain, fsizeok, panelclose;
+JPanel Taskbar, bottom ,center;
+JTextField fSize,Title;
+// constructor of the main class
+Anotepad() {
+super("Advance NotePad");
+// creating objects of all components
+ta = new JTextArea("//Here you can start your writing ");
+jsp = new JScrollPane(ta);
+fd = new FileDialog(new Frame());
+menubar = new JMenuBar();
+center = new JPanel();
+center.setLayout(new BorderLayout());
+Title = new JTextField("Enter Title here",100); 
+menu1 = new JMenu("File");
+item1 = new JMenuItem("Write Notes");
+item2 = new JMenuItem("exit");
+item3 = new JMenuItem("clear");
+item5 = new JMenuItem("save");
+item6 = new JMenuItem("Notepad");
+open = new JMenuItem("open");
+fontsize = new JMenuItem("Font");
+menu2 = new JMenu("Edit");
+item4 = new JMenuItem("Dark Mode");
+cut = new JMenuItem("Cut");
+copy = new JMenuItem("Copy");
+paste = new JMenuItem("Paste");
+selectall = new JMenuItem("Select All");
+menu3 = new JMenu("view");
+normalmode = new JMenuItem("Normal Mode");
+totalwords = new JMenuItem("Total Words");
+totalcharacters = new JMenuItem("Total Characters");
+Bold = new JButton("Bold");
+Bold.setFont(new Font("Courier", Font.BOLD, 10));
+italic = new JButton("Italic");
+italic.setFont(new Font("Courier", Font.ITALIC, 10));
+plain = new JButton("Plain");
+plain.setFont(new Font("Courier", Font.PLAIN, 10));
+panelclose = new JButton("X");
+panelclose.setFont(new Font("Courier", Font.BOLD, 10));
+Taskbar = new JPanel();
+Taskbar.setVisible(false);
+labelfsize = new JLabel("Enter Font Size: ");
+fSize = new JTextField(3);
+fsizeok = new JButton("OK");
+fsizeok.setFont(new Font("Courier", Font.PLAIN, 10));
+bottom = new JPanel();
+bottom.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+bottom.setVisible(true);
+textLength = new JLabel("");
+textLength.setFont(new Font("Courier", Font.PLAIN, 10));
+// adding menu items to menu
+menu1.add(item6);
+menu1.add(item5);
+menu1.add(open);
+menu1.add(item1);
+menu1.add(item2);
+menu1.add(item3);
+menu2.add(fontsize);
+menu2.add(cut);
+menu2.add(copy);
+menu2.add(paste);
+menu2.add(selectall);
+menu3.add(item4);
+menu3.add(normalmode);
+menu3.add(totalwords);
+menu3.add(totalcharacters);
+// adding menu to menu bar
+menubar.add(menu1);
+menubar.add(menu2);
+menubar.add(menu3);
+// adding actionListener to all components
+item1.addActionListener(this);
+item2.addActionListener(this);
+item3.addActionListener(this);
+item4.addActionListener(this);
+item5.addActionListener(this);
+item6.addActionListener(this);
+open.addActionListener(this);
+fontsize.addActionListener(this);
+cut.addActionListener(this);
+copy.addActionListener(this);
+paste.addActionListener(this);
+selectall.addActionListener(this);
+normalmode.addActionListener(this);
+totalcharacters.addActionListener(this);
+totalwords.addActionListener(this);
+Bold.addActionListener(this);
+italic.addActionListener(this);
+fsizeok.addActionListener(this);
+plain.addActionListener(this);
+panelclose.addActionListener(this);
+ta.addKeyListener(this);
+// adding layout to frame
+Taskbar.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
+// add Components
+Taskbar.add(panelclose);
+Taskbar.add(Bold);
+Taskbar.add(italic);
+Taskbar.add(plain);
+Taskbar.add(labelfsize);
+Taskbar.add(fSize);
+Taskbar.add(fsizeok);
+bottom.add(textLength);
+add(Taskbar, BorderLayout.NORTH);
+add(center, BorderLayout.CENTER);
+center.add(Title,BorderLayout.NORTH);
+Title.setVisible(false);
+center.add(jsp, BorderLayout.CENTER);
+add(bottom, BorderLayout.SOUTH);
+// adding colors
+Taskbar.setBackground(Color.LIGHT_GRAY);
+panelclose.setBackground(Color.RED);
+panelclose.setForeground(Color.WHITE);
+Bold.setBackground(Color.DARK_GRAY);
+italic.setBackground(Color.DARK_GRAY);
+plain.setBackground(Color.DARK_GRAY);
+fsizeok.setBackground(Color.DARK_GRAY);
+Bold.setForeground(Color.WHITE);
+italic.setForeground(Color.WHITE);
+plain.setForeground(Color.WHITE);
+fsizeok.setForeground(Color.WHITE);
+Title.setBackground(Color.white);
+// adding menu bar to frame
+setJMenuBar(menubar);
+// giving font and size to text of textArea
+ta.setFont(new Font("Courier", Font.PLAIN, fontsize1));
+Title.setFont(new Font("Elephant",Font.BOLD,fontsize1+5));
+Title.setHorizontalAlignment(JTextField.CENTER);
+// basic methods of frame
+setSize(800, 600);
+setVisible(true);
+}
+// giving action to buttons
+public void actionPerformed(ActionEvent ae) {
+if (ae.getSource() == item6) {
+Title.setVisible(false);
+}
+if (ae.getSource() == item1) {
+Title.setVisible(true);
+} else if (ae.getSource() == item2) {
+this.dispose();
+} else if (ae.getSource() == item3) {
+ta.setText("");
+} else if (ae.getSource() == item4) {
+ta.setBackground(Color.BLACK);
+ta.setForeground(Color.WHITE);
+} else if (ae.getSource() == item5) {
+JFileChooser fileChooser = new JFileChooser();
+int returnValue = fileChooser.showSaveDialog(this);
+if (returnValue == JFileChooser.APPROVE_OPTION) {
+File fileToSave = fileChooser.getSelectedFile();
+try {
+FileWriter fw = new FileWriter(fileToSave);
+BufferedWriter bw = new BufferedWriter(fw);
+ta.write(bw);
+bw.close();
+} catch (IOException ex) {
+ex.printStackTrace();
+}
+}
+} else if (ae.getSource() == open) {
+JFileChooser fileChooser = new JFileChooser();
+int returnValue = fileChooser.showOpenDialog(this);
+if (returnValue == JFileChooser.APPROVE_OPTION) {
+File selectedFile = fileChooser.getSelectedFile();
+try {
+FileReader fr = new FileReader(selectedFile);
+BufferedReader br = new BufferedReader(fr);
+ta.read(br, null);
+br.close();
+ta.requestFocus();
+} catch (IOException ex) {
+ex.printStackTrace();
+}
+}
+} else if (ae.getSource() == fontsize) {
+Taskbar.setVisible(true);
+} else if (ae.getSource() == cut) {
+ta.cut();
+} else if (ae.getSource() == copy) {
+ta.copy();
+} else if (ae.getSource() == paste) {
+ta.paste();
+} else if (ae.getSource() == selectall) {
+ta.selectAll();
+} else if (ae.getSource() == normalmode) {
+ta.setBackground(Color.WHITE);
+ta.setForeground(Color.BLACK);
+} else if (ae.getSource() == Bold) {
+ta.setFont(new Font("Courier", Font.BOLD, fontsize1));
+} else if (ae.getSource() == italic) {
+ta.setFont(new Font("Courier", Font.ITALIC, fontsize1));
+} else if (ae.getSource() == fsizeok) {
+String s1 = fSize.getText();
+fontsize1 = Integer.parseInt(s1);
+ta.setFont(new Font("Courier", Font.PLAIN, fontsize1));
+} else if (ae.getSource() == plain) {
+ta.setFont(new Font("Courier", Font.PLAIN, fontsize1));
+} else if (ae.getSource() == panelclose) {
+Taskbar.setVisible(false);
+}
+}
+public void keyPressed(KeyEvent ke) {
+String letters = ta.getText();
+textLength.setText("total letters are = " + letters.length());
+}
+public void keyTyped(KeyEvent ke) {
+String letters = ta.getText();
+textLength.setText("total letters are = " + letters.length());
+}
+public void keyReleased(KeyEvent ke) {
+}
+public static void main(String[] args) {
+new Anotepad();
+}
+}
